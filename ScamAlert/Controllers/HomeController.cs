@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScamAlert.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,12 @@ namespace ScamAlert.Controllers
 {
     public class HomeController : Controller
     {
+        private aklaassenEntities1 db = new aklaassenEntities1();
+
         public ActionResult Index()
         {
-            return View();
+            var sCAM = db.Scams;
+            return View(sCAM.ToList());
         }
 
         public ActionResult About()
