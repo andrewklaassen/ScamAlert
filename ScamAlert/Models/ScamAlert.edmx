@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="aklaassenModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="aklaassenModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Privileges">
           <Key>
             <PropertyRef Name="privilegeId" />
@@ -34,16 +34,6 @@
           <Property Name="datePosted" Type="datetime" Nullable="false" />
           <Property Name="firstReportedBy" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="userId" />
@@ -54,7 +44,6 @@
           <Property Name="lastName" Type="varchar" MaxLength="15" />
           <Property Name="passwordHash" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="points" Type="int" Nullable="false" />
-          <Property Name="isAdmin" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Votes">
           <Key>
@@ -161,18 +150,46 @@
           <Parameter Name="description" Type="varchar(max)" Mode="In" />
           <Parameter Name="firstReportedBy" Type="int" Mode="In" />
         </Function>
+        <Function Name="uspAddAScamReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+          <Parameter Name="scamId" Type="int" Mode="In" />
+          <Parameter Name="report" Type="varchar(max)" Mode="In" />
+        </Function>
         <Function Name="uspAddUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userName" Type="varchar" Mode="In" />
           <Parameter Name="firstName" Type="varchar" Mode="In" />
           <Parameter Name="lastName" Type="varchar" Mode="In" />
           <Parameter Name="passwordHash" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="uspAdminExists" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="isAdmin" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="uspGetScamReports" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="scamId" Type="int" Mode="In" />
+        </Function>
         <Function Name="uspGetScams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="uspGetVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+          <Parameter Name="scamId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspUserExists" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="isUser" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="uspVerifyUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CurrentUser" Type="varchar" Mode="In" />
+          <Parameter Name="CurrentHash" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+          <Parameter Name="scamId" Type="int" Mode="In" />
+          <Parameter Name="vote" Type="bit" Mode="In" />
+        </Function>
         <EntityContainer Name="aklaassenModelStoreContainer">
           <EntitySet Name="Privileges" EntityType="Self.Privileges" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ScamReports" EntityType="Self.ScamReports" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Scams" EntityType="Self.Scams" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Votes" EntityType="Self.Votes" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ScamReports_Scams" Association="Self.FK_ScamReports_Scams">
@@ -196,168 +213,11 @@
             <End Role="Scams" EntitySet="Scams" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="aklaassenModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Privilege">
-          <Key>
-            <PropertyRef Name="privilegeId" />
-          </Key>
-          <Property Name="privilegeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="privilegeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="privilegeDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="pointsRequired" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ScamReport">
-          <Key>
-            <PropertyRef Name="scamReportId" />
-          </Key>
-          <Property Name="scamReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="scamId" Type="Int32" Nullable="false" />
-          <Property Name="byUserId" Type="Int32" Nullable="false" />
-          <Property Name="report" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="timePosted" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Scam" Relationship="Self.FK_ScamReports_Scams" FromRole="ScamReports" ToRole="Scams" />
-          <NavigationProperty Name="User" Relationship="Self.FK_ScamReports_Users" FromRole="ScamReports" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="Scam">
-          <Key>
-            <PropertyRef Name="scamId" />
-          </Key>
-          <Property Name="scamId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="scamName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="datePosted" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="firstReportedBy" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ScamReports" Relationship="Self.FK_ScamReports_Scams" FromRole="Scams" ToRole="ScamReports" />
-          <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Scams" FromRole="Scams" ToRole="Votes" />
-          <NavigationProperty Name="User" Relationship="Self.ScamFirstReportedBy" FromRole="Scams" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="userId" />
-          </Key>
-          <Property Name="userId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="userName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="firstName" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="lastName" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="passwordHash" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="points" Type="Int32" Nullable="false" />
-          <Property Name="isAdmin" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="ScamReports" Relationship="Self.FK_ScamReports_Users" FromRole="Users" ToRole="ScamReports" />
-          <NavigationProperty Name="Scams" Relationship="Self.ScamFirstReportedBy" FromRole="Users" ToRole="Scams" />
-          <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Users" FromRole="Users" ToRole="Votes" />
-        </EntityType>
-        <EntityType Name="Vote">
-          <Key>
-            <PropertyRef Name="voteId" />
-          </Key>
-          <Property Name="voteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="scamId" Type="Int32" Nullable="false" />
-          <Property Name="userId" Type="Int32" Nullable="false" />
-          <Property Name="vote1" Type="Boolean" />
-          <NavigationProperty Name="Scam" Relationship="Self.FK_Votes_Scams" FromRole="Votes" ToRole="Scams" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Votes_Users" FromRole="Votes" ToRole="Users" />
-        </EntityType>
-        <Association Name="FK_ScamReports_Scams">
-          <End Role="Scams" Type="Self.Scam" Multiplicity="1" />
-          <End Role="ScamReports" Type="Self.ScamReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Scams">
-              <PropertyRef Name="scamId" />
-            </Principal>
-            <Dependent Role="ScamReports">
-              <PropertyRef Name="scamId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ScamReports_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="ScamReports" Type="Self.ScamReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="userId" />
-            </Principal>
-            <Dependent Role="ScamReports">
-              <PropertyRef Name="byUserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Votes_Scams">
-          <End Role="Scams" Type="Self.Scam" Multiplicity="1" />
-          <End Role="Votes" Type="Self.Vote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Scams">
-              <PropertyRef Name="scamId" />
-            </Principal>
-            <Dependent Role="Votes">
-              <PropertyRef Name="scamId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ScamFirstReportedBy">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Scams" Type="Self.Scam" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="userId" />
-            </Principal>
-            <Dependent Role="Scams">
-              <PropertyRef Name="firstReportedBy" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Votes_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Votes" Type="Self.Vote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="userId" />
-            </Principal>
-            <Dependent Role="Votes">
-              <PropertyRef Name="userId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="aklaassenEntities1" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Privileges" EntityType="Self.Privilege" />
-          <EntitySet Name="ScamReports" EntityType="Self.ScamReport" />
-          <EntitySet Name="Scams" EntityType="Self.Scam" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <EntitySet Name="Votes" EntityType="Self.Vote" />
-          <AssociationSet Name="FK_ScamReports_Scams" Association="Self.FK_ScamReports_Scams">
-            <End Role="Scams" EntitySet="Scams" />
-            <End Role="ScamReports" EntitySet="ScamReports" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ScamReports_Users" Association="Self.FK_ScamReports_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="ScamReports" EntitySet="ScamReports" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Votes_Scams" Association="Self.FK_Votes_Scams">
-            <End Role="Scams" EntitySet="Scams" />
-            <End Role="Votes" EntitySet="Votes" />
-          </AssociationSet>
-          <AssociationSet Name="ScamFirstReportedBy" Association="Self.ScamFirstReportedBy">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Scams" EntitySet="Scams" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Votes_Users" Association="Self.FK_Votes_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Votes" EntitySet="Votes" />
-          </AssociationSet>
           <FunctionImport Name="sp_alterdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
@@ -400,6 +260,60 @@
             <Parameter Name="passwordHash" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="uspGetScams" ReturnType="Collection(aklaassenModel.uspGetScams_Result)" />
+          <EntitySet Name="Privileges" EntityType="aklaassenModel.Privilege" />
+          <EntitySet Name="ScamReports" EntityType="aklaassenModel.ScamReport" />
+          <EntitySet Name="Scams" EntityType="aklaassenModel.Scam" />
+          <EntitySet Name="Users" EntityType="aklaassenModel.User" />
+          <EntitySet Name="Votes" EntityType="aklaassenModel.Vote" />
+          <AssociationSet Name="FK_ScamReports_Scams" Association="aklaassenModel.FK_ScamReports_Scams">
+            <End Role="Scam" EntitySet="Scams" />
+            <End Role="ScamReport" EntitySet="ScamReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScamReports_Users" Association="aklaassenModel.FK_ScamReports_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ScamReport" EntitySet="ScamReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_Scams" Association="aklaassenModel.FK_Votes_Scams">
+            <End Role="Scam" EntitySet="Scams" />
+            <End Role="Vote" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="ScamFirstReportedBy" Association="aklaassenModel.ScamFirstReportedBy">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Scam" EntitySet="Scams" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Votes_Users" Association="aklaassenModel.FK_Votes_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Vote" EntitySet="Votes" />
+          </AssociationSet>
+          <FunctionImport Name="uspAddAScamReport">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+            <Parameter Name="scamId" Mode="In" Type="Int32" />
+            <Parameter Name="report" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspAdminExists">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="isAdmin" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetScamReports" ReturnType="Collection(aklaassenModel.uspGetScamReports_Result)">
+            <Parameter Name="scamId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetVote" ReturnType="Collection(Boolean)">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+            <Parameter Name="scamId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspUserExists">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="isUser" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspVerifyUser">
+            <Parameter Name="CurrentUser" Mode="In" Type="String" />
+            <Parameter Name="CurrentHash" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspVote">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+            <Parameter Name="scamId" Mode="In" Type="Int32" />
+            <Parameter Name="vote" Mode="In" Type="Boolean" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -419,78 +333,136 @@
           <Property Type="DateTime" Name="datePosted" Nullable="false" Precision="23" />
           <Property Type="Int32" Name="firstReportedBy" Nullable="false" />
         </ComplexType>
+        <EntityType Name="Privilege">
+          <Key>
+            <PropertyRef Name="privilegeId" />
+          </Key>
+          <Property Name="privilegeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="privilegeName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="privilegeDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="pointsRequired" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ScamReport">
+          <Key>
+            <PropertyRef Name="scamReportId" />
+          </Key>
+          <Property Name="scamReportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="scamId" Type="Int32" Nullable="false" />
+          <Property Name="byUserId" Type="Int32" Nullable="false" />
+          <Property Name="report" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="timePosted" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Scam" Relationship="aklaassenModel.FK_ScamReports_Scams" FromRole="ScamReport" ToRole="Scam" />
+          <NavigationProperty Name="User" Relationship="aklaassenModel.FK_ScamReports_Users" FromRole="ScamReport" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Scam">
+          <Key>
+            <PropertyRef Name="scamId" />
+          </Key>
+          <Property Name="scamId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="scamName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="datePosted" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="firstReportedBy" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ScamReports" Relationship="aklaassenModel.FK_ScamReports_Scams" FromRole="Scam" ToRole="ScamReport" />
+          <NavigationProperty Name="Votes" Relationship="aklaassenModel.FK_Votes_Scams" FromRole="Scam" ToRole="Vote" />
+          <NavigationProperty Name="User" Relationship="aklaassenModel.ScamFirstReportedBy" FromRole="Scam" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="firstName" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="lastName" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="passwordHash" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="points" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ScamReports" Relationship="aklaassenModel.FK_ScamReports_Users" FromRole="User" ToRole="ScamReport" />
+          <NavigationProperty Name="Scams" Relationship="aklaassenModel.ScamFirstReportedBy" FromRole="User" ToRole="Scam" />
+          <NavigationProperty Name="Votes" Relationship="aklaassenModel.FK_Votes_Users" FromRole="User" ToRole="Vote" />
+        </EntityType>
+        <EntityType Name="Vote">
+          <Key>
+            <PropertyRef Name="voteId" />
+          </Key>
+          <Property Name="voteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="scamId" Type="Int32" Nullable="false" />
+          <Property Name="userId" Type="Int32" Nullable="false" />
+          <Property Name="vote1" Type="Boolean" />
+          <NavigationProperty Name="Scam" Relationship="aklaassenModel.FK_Votes_Scams" FromRole="Vote" ToRole="Scam" />
+          <NavigationProperty Name="User" Relationship="aklaassenModel.FK_Votes_Users" FromRole="Vote" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_ScamReports_Scams">
+          <End Type="aklaassenModel.Scam" Role="Scam" Multiplicity="1" />
+          <End Type="aklaassenModel.ScamReport" Role="ScamReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scam">
+              <PropertyRef Name="scamId" />
+            </Principal>
+            <Dependent Role="ScamReport">
+              <PropertyRef Name="scamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScamReports_Users">
+          <End Type="aklaassenModel.User" Role="User" Multiplicity="1" />
+          <End Type="aklaassenModel.ScamReport" Role="ScamReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="ScamReport">
+              <PropertyRef Name="byUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_Scams">
+          <End Type="aklaassenModel.Scam" Role="Scam" Multiplicity="1" />
+          <End Type="aklaassenModel.Vote" Role="Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Scam">
+              <PropertyRef Name="scamId" />
+            </Principal>
+            <Dependent Role="Vote">
+              <PropertyRef Name="scamId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ScamFirstReportedBy">
+          <End Type="aklaassenModel.User" Role="User" Multiplicity="1" />
+          <End Type="aklaassenModel.Scam" Role="Scam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="Scam">
+              <PropertyRef Name="firstReportedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Votes_Users">
+          <End Type="aklaassenModel.User" Role="User" Multiplicity="1" />
+          <End Type="aklaassenModel.Vote" Role="Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="Vote">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="uspGetScamReports_Result">
+          <Property Type="String" Name="report" Nullable="false" />
+          <Property Type="DateTime" Name="timePosted" Nullable="false" Precision="23" />
+          <Property Type="String" Name="userName" Nullable="true" MaxLength="20" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="aklaassenModelStoreContainer" CdmEntityContainer="aklaassenEntities1">
-          <EntitySetMapping Name="Privileges">
-            <EntityTypeMapping TypeName="aklaassenModel.Privilege">
-              <MappingFragment StoreEntitySet="Privileges">
-                <ScalarProperty Name="privilegeId" ColumnName="privilegeId" />
-                <ScalarProperty Name="privilegeName" ColumnName="privilegeName" />
-                <ScalarProperty Name="privilegeDescription" ColumnName="privilegeDescription" />
-                <ScalarProperty Name="pointsRequired" ColumnName="pointsRequired" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ScamReports">
-            <EntityTypeMapping TypeName="aklaassenModel.ScamReport">
-              <MappingFragment StoreEntitySet="ScamReports">
-                <ScalarProperty Name="scamReportId" ColumnName="scamReportId" />
-                <ScalarProperty Name="scamId" ColumnName="scamId" />
-                <ScalarProperty Name="byUserId" ColumnName="byUserId" />
-                <ScalarProperty Name="report" ColumnName="report" />
-                <ScalarProperty Name="timePosted" ColumnName="timePosted" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Scams">
-            <EntityTypeMapping TypeName="aklaassenModel.Scam">
-              <MappingFragment StoreEntitySet="Scams">
-                <ScalarProperty Name="scamId" ColumnName="scamId" />
-                <ScalarProperty Name="scamName" ColumnName="scamName" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="datePosted" ColumnName="datePosted" />
-                <ScalarProperty Name="firstReportedBy" ColumnName="firstReportedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="aklaassenModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="aklaassenModel.User">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="userName" ColumnName="userName" />
-                <ScalarProperty Name="firstName" ColumnName="firstName" />
-                <ScalarProperty Name="lastName" ColumnName="lastName" />
-                <ScalarProperty Name="passwordHash" ColumnName="passwordHash" />
-                <ScalarProperty Name="points" ColumnName="points" />
-                <ScalarProperty Name="isAdmin" ColumnName="isAdmin" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Votes">
-            <EntityTypeMapping TypeName="aklaassenModel.Vote">
-              <MappingFragment StoreEntitySet="Votes">
-                <ScalarProperty Name="voteId" ColumnName="voteId" />
-                <ScalarProperty Name="scamId" ColumnName="scamId" />
-                <ScalarProperty Name="userId" ColumnName="userId" />
-                <ScalarProperty Name="vote1" ColumnName="vote" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="aklaassenModel.Store.sp_alterdiagram" />
           <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="aklaassenModel.Store.sp_creatediagram" />
           <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="aklaassenModel.Store.sp_dropdiagram" />
@@ -528,6 +500,75 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Privileges">
+            <EntityTypeMapping TypeName="aklaassenModel.Privilege">
+              <MappingFragment StoreEntitySet="Privileges">
+                <ScalarProperty Name="pointsRequired" ColumnName="pointsRequired" />
+                <ScalarProperty Name="privilegeDescription" ColumnName="privilegeDescription" />
+                <ScalarProperty Name="privilegeName" ColumnName="privilegeName" />
+                <ScalarProperty Name="privilegeId" ColumnName="privilegeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScamReports">
+            <EntityTypeMapping TypeName="aklaassenModel.ScamReport">
+              <MappingFragment StoreEntitySet="ScamReports">
+                <ScalarProperty Name="timePosted" ColumnName="timePosted" />
+                <ScalarProperty Name="report" ColumnName="report" />
+                <ScalarProperty Name="byUserId" ColumnName="byUserId" />
+                <ScalarProperty Name="scamId" ColumnName="scamId" />
+                <ScalarProperty Name="scamReportId" ColumnName="scamReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Scams">
+            <EntityTypeMapping TypeName="aklaassenModel.Scam">
+              <MappingFragment StoreEntitySet="Scams">
+                <ScalarProperty Name="firstReportedBy" ColumnName="firstReportedBy" />
+                <ScalarProperty Name="datePosted" ColumnName="datePosted" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="scamName" ColumnName="scamName" />
+                <ScalarProperty Name="scamId" ColumnName="scamId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="aklaassenModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="points" ColumnName="points" />
+                <ScalarProperty Name="passwordHash" ColumnName="passwordHash" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="userName" ColumnName="userName" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Votes">
+            <EntityTypeMapping TypeName="aklaassenModel.Vote">
+              <MappingFragment StoreEntitySet="Votes">
+                <ScalarProperty Name="vote1" ColumnName="vote" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="scamId" ColumnName="scamId" />
+                <ScalarProperty Name="voteId" ColumnName="voteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="uspAddAScamReport" FunctionName="aklaassenModel.Store.uspAddAScamReport" />
+          <FunctionImportMapping FunctionImportName="uspAdminExists" FunctionName="aklaassenModel.Store.uspAdminExists" />
+          <FunctionImportMapping FunctionImportName="uspGetScamReports" FunctionName="aklaassenModel.Store.uspGetScamReports">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="aklaassenModel.uspGetScamReports_Result">
+                <ScalarProperty Name="report" ColumnName="report" />
+                <ScalarProperty Name="timePosted" ColumnName="timePosted" />
+                <ScalarProperty Name="userName" ColumnName="userName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetVote" FunctionName="aklaassenModel.Store.uspGetVote" />
+          <FunctionImportMapping FunctionImportName="uspUserExists" FunctionName="aklaassenModel.Store.uspUserExists" />
+          <FunctionImportMapping FunctionImportName="uspVerifyUser" FunctionName="aklaassenModel.Store.uspVerifyUser" />
+          <FunctionImportMapping FunctionImportName="uspVote" FunctionName="aklaassenModel.Store.uspVote" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

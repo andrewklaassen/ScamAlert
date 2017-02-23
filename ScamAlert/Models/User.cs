@@ -28,7 +28,6 @@ namespace ScamAlert.Models
         public string lastName { get; set; }
         public string passwordHash { get; set; }
         public int points { get; set; }
-        public bool isAdmin { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ScamReport> ScamReports { get; set; }

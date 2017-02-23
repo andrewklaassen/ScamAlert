@@ -5,17 +5,16 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="fefbec74c4d245268f7584c8d98a3fd0" Name="Diagram1">
-        <EntityTypeShape EntityType="aklaassenModel.Privilege" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="aklaassenModel.ScamReport" Width="1.5" PointX="5.25" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="aklaassenModel.Scam" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="aklaassenModel.sysdiagram" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="aklaassenModel.User" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="aklaassenModel.Vote" Width="1.5" PointX="5.25" PointY="7.375" IsExpanded="true" />
-        <AssociationConnector Association="aklaassenModel.FK_ScamReports_Scams" ManuallyRouted="false" />
-        <AssociationConnector Association="aklaassenModel.FK_ScamReports_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="aklaassenModel.FK_Votes_Scams" ManuallyRouted="false" />
-        <AssociationConnector Association="aklaassenModel.ScamFirstReportedBy" ManuallyRouted="false" />
-        <AssociationConnector Association="aklaassenModel.FK_Votes_Users" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="aklaassenModel.Privilege" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="aklaassenModel.ScamReport" Width="1.5" PointX="5.25" PointY="4.25" />
+        <EntityTypeShape EntityType="aklaassenModel.Scam" Width="1.5" PointX="3" PointY="5.75" />
+        <EntityTypeShape EntityType="aklaassenModel.User" Width="1.5" PointX="0.75" PointY="2.625" />
+        <EntityTypeShape EntityType="aklaassenModel.Vote" Width="1.5" PointX="5.25" PointY="7.375" />
+        <AssociationConnector Association="aklaassenModel.FK_ScamReports_Scams" />
+        <AssociationConnector Association="aklaassenModel.FK_ScamReports_Users" />
+        <AssociationConnector Association="aklaassenModel.FK_Votes_Scams" />
+        <AssociationConnector Association="aklaassenModel.ScamFirstReportedBy" />
+        <AssociationConnector Association="aklaassenModel.FK_Votes_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

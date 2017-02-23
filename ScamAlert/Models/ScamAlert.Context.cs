@@ -30,7 +30,6 @@ namespace ScamAlert.Models
         public virtual DbSet<Privilege> Privileges { get; set; }
         public virtual DbSet<ScamReport> ScamReports { get; set; }
         public virtual DbSet<Scam> Scams { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Vote> Votes { get; set; }
     
@@ -178,6 +177,93 @@ namespace ScamAlert.Models
         public virtual ObjectResult<uspGetScams_Result> uspGetScams()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetScams_Result>("uspGetScams");
+        }
+    
+        public virtual int uspAddAScamReport(Nullable<int> userId, Nullable<int> scamId, string report)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            var scamIdParameter = scamId.HasValue ?
+                new ObjectParameter("scamId", scamId) :
+                new ObjectParameter("scamId", typeof(int));
+    
+            var reportParameter = report != null ?
+                new ObjectParameter("report", report) :
+                new ObjectParameter("report", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspAddAScamReport", userIdParameter, scamIdParameter, reportParameter);
+        }
+    
+        public virtual int uspAdminExists(string username, ObjectParameter isAdmin)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspAdminExists", usernameParameter, isAdmin);
+        }
+    
+        public virtual ObjectResult<uspGetScamReports_Result> uspGetScamReports(Nullable<int> scamId)
+        {
+            var scamIdParameter = scamId.HasValue ?
+                new ObjectParameter("scamId", scamId) :
+                new ObjectParameter("scamId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetScamReports_Result>("uspGetScamReports", scamIdParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<bool>> uspGetVote(Nullable<int> userId, Nullable<int> scamId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            var scamIdParameter = scamId.HasValue ?
+                new ObjectParameter("scamId", scamId) :
+                new ObjectParameter("scamId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("uspGetVote", userIdParameter, scamIdParameter);
+        }
+    
+        public virtual int uspUserExists(string username, ObjectParameter isUser)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspUserExists", usernameParameter, isUser);
+        }
+    
+        public virtual int uspVerifyUser(string currentUser, string currentHash)
+        {
+            var currentUserParameter = currentUser != null ?
+                new ObjectParameter("CurrentUser", currentUser) :
+                new ObjectParameter("CurrentUser", typeof(string));
+    
+            var currentHashParameter = currentHash != null ?
+                new ObjectParameter("CurrentHash", currentHash) :
+                new ObjectParameter("CurrentHash", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspVerifyUser", currentUserParameter, currentHashParameter);
+        }
+    
+        public virtual int uspVote(Nullable<int> userId, Nullable<int> scamId, Nullable<bool> vote)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            var scamIdParameter = scamId.HasValue ?
+                new ObjectParameter("scamId", scamId) :
+                new ObjectParameter("scamId", typeof(int));
+    
+            var voteParameter = vote.HasValue ?
+                new ObjectParameter("vote", vote) :
+                new ObjectParameter("vote", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspVote", userIdParameter, scamIdParameter, voteParameter);
         }
     }
 }
