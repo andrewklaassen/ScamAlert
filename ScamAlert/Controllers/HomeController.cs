@@ -16,19 +16,7 @@ namespace ScamAlert.Controllers
             var sCAM = db.Scams;
             return View(sCAM.ToList());
         }
+        //TODO: Need to build Scam Report method
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

@@ -1,0 +1,50 @@
+﻿@model ScamAlert.Models.ScamReport
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View</h2>
+
+<div>
+    <h4>ScamReport</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.report)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.report)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.timePosted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.timePosted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Scam.scamName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Scam.scamName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.userName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.userName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
