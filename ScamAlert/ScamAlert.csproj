@@ -159,6 +159,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Models\ScamReports.cs" />
     <Compile Include="Models\uspGetScamReports_Result.cs">
       <DependentUpon>ScamAlert.tt</DependentUpon>
     </Compile>

@@ -28,8 +28,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.description)
             </td>
-            //TODO: Needs Work Still
-            @Html.ActionLink("View Scam Reports", "ScamReports", new { id = item.scamId })
+            <td>
+                @Html.ActionLink("View Scam Reports", "View", new { scamId = item.scamId }, 0)
+            </td>
         </tr>
     }
 </table>
