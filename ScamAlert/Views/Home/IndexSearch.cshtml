@@ -38,3 +38,8 @@
         </tr>
     }
 </table>
+Can't find the Scam?
+@if (User.Identity.IsAuthenticated)
+{
+@Html.ActionLink("Create A New One", "Create", "Scams")
+}

@@ -1,0 +1,40 @@
+﻿@model ScamAlert.Models.ScamReport
+
+@{
+    ViewBag.Title = "Add Scam Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add your own Scam Report</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>ScamReport</h4>
+        <hr />
+
+        <div class="form-group">
+            <div class="col-lg-12">
+                @Html.TextAreaFor(model => model.report, new { @class = "form-control", @cols="300", @rows="5"})
+                @Html.ValidationMessageFor(model => model.report, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Sumbit the Report" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Scam List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

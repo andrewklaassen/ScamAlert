@@ -17,6 +17,36 @@ namespace ScamAlert.Controllers
             var sCAM = db.Scams;
             return View(sCAM.ToList());
         }
+        public ActionResult IndexSearch(String search)
+        {
+            SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
+            SqlCommand cmd = new SqlCommand("uspGetScamsSearch", sqlConnection1);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@Search", SqlDbType.VarChar).Value = search;
+            sqlConnection1.Open();
+            // Use a reader to get a list
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<Scam> scamList = new List<Scam>();
+            // Create a list using the reader
+            while (reader.Read())
+            {
+                Scam scam = new Scam();
+                scam.scamId = int.Parse(Convert.ToString(reader["scamId"]));
+                scam.scamName = reader["scamName"].ToString();
+                scam.description = reader["description"].ToString();
+                scam.datePosted = DateTime.Parse(reader["datePosted"].ToString());
+                scam.firstReportedBy = int.Parse(Convert.ToString(reader["firstReportedBy"]));
+                scamList.Add(scam);
+            }
+            return View(scamList.ToList());
+        }
+        // GET: IndexError
+        // Is only called when there is an error and a redirect back to the index
+        public ActionResult IndexError()
+        {
+            ViewBag.Message = "<div class=\"alert alert-info alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" + "No Shopping Cart Items added" + " </div>";
+            return View("Index");
+        }
         public ActionResult View(int scamId)
         {
             try
@@ -36,9 +66,22 @@ namespace ScamAlert.Controllers
                 return RedirectToAction("IndexError", "Home");
             }
         }
-
+        public ActionResult CreateScamReport()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateScamReport(ScamReport scamReport)
+        {
+            int userId = getUserId();
+            int scamId = Convert.ToInt32(Session["scamId"]);
+            db.uspAddAScamReport(userId, scamId, scamReport.report);
+            return RedirectToAction("View", scamId);
+        }
         private List<ScamReport> getScamReportss(int scamId)
         {
+            Session["scamId"] = scamId;
             // Open a Sql Connection
             SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
             SqlCommand cmd = new SqlCommand("uspGetScamReports", sqlConnection1);
@@ -60,6 +103,17 @@ namespace ScamAlert.Controllers
             }
             sqlConnection1.Close();
             return scamrList;
+        }
+        private int getUserId()
+        {
+            SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
+            SqlCommand cmd = new SqlCommand("uspGetUserId", sqlConnection1);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = User.Identity.Name;
+            sqlConnection1.Open();
+            int count = 0;
+            count = (Int32)cmd.ExecuteScalar();
+            return count;
         }
     }
 }

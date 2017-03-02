@@ -11,7 +11,8 @@ namespace ScamAlert.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -26,6 +27,7 @@ namespace ScamAlert.Models
         public string userName { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
+        [DataType(DataType.Password)]
         public string passwordHash { get; set; }
         public int points { get; set; }
     

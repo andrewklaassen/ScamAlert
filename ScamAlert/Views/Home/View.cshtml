@@ -25,14 +25,17 @@
         @foreach (var item in Model.First().ScamReportss)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.User.userName)</td>
-                <td>@Html.DisplayFor(modelItem => item.report)</td>
-                <td>@Html.DisplayFor(modelItem => item.timePosted)</td>
+                <td width="15%">@Html.DisplayFor(modelItem => item.User.userName)</td>
+                <td width="60%">@Html.DisplayFor(modelItem => item.report)</td>
+                <td width="25%">@Html.DisplayFor(modelItem => item.timePosted)</td>
             </tr>
         }
     </table>
 </div>
-<p>
-   @* @Html.ActionLink("Add your own report", "Index")*@
-    @Html.ActionLink("Back to Scam List", "Index")
+<p>@if (User.Identity.IsAuthenticated)
+{
+    @Html.ActionLink("Add your own report", "CreateScamReport", "ScamReport")
+}
+    <br />
+    @Html.ActionLink("Back to Scam List", "Index", "Home")
 </p>
