@@ -98,6 +98,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -159,8 +160,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RSSController.cs" />
     <Compile Include="Controllers\ScamReportController.cs" />
     <Compile Include="Controllers\ScamsController.cs" />
+    <Compile Include="Models\ChildNodes.cs" />
     <Compile Include="Models\ScamReports.cs" />
     <Compile Include="Models\uspGetScamReports_Result.cs">
       <DependentUpon>ScamAlert.tt</DependentUpon>
@@ -296,6 +299,7 @@
     <Content Include="Views\Scams\Create.cshtml" />
     <Content Include="Views\Scams\Delete.cshtml" />
     <Content Include="Views\Scams\Edit.cshtml" />
+    <Content Include="Views\RSS\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

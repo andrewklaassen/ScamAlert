@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ScamAlert.Models.ChildNodes>
+@{
+    ViewBag.Title = "RSS Scam Alerts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>RSS Scam Alerts</h2>
+@{int counter = 0; }
+@foreach (var item in Model.First().childNodes)
+{
+    //The first five XML items are Overall Title, Overall Link, A blank description, A blank language and an Atom Link
+    if (counter < 5)
+    {
+        counter++;
+    }
+    else
+    {
+
+        <h4>@Html.Raw(item["title"].InnerText)</h4>
+        @Html.Raw(item["description"].InnerText)
+        <a href=@Html.Raw(item["link"].InnerText) ;">@Html.Raw(item["link"].InnerText)</a>
+        <br /><br />
+    }
+}
