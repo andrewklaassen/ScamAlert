@@ -18,21 +18,42 @@ namespace ScamAlert.Controllers
             SqlCommand cmd = new SqlCommand("uspGetScamsSearch", sqlConnection1);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@Search", SqlDbType.VarChar).Value = "";
-            sqlConnection1.Open();
+            int userId = getUserId();
+            cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+            try
+            {
+                sqlConnection1.Open();
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("IndexError", "Home");
+            }
             // Use a reader to get a list
             SqlDataReader reader = cmd.ExecuteReader();
-            List<Scam> scamList = new List<Scam>();
+            List<ScamVote> scamList = new List<ScamVote>();
             // Create a list using the reader
             while (reader.Read())
             {
-                Scam scam = new Scam();
+                ScamVote scam = new ScamVote();
                 scam.scamId = int.Parse(Convert.ToString(reader["scamId"]));
                 scam.scamName = reader["scamName"].ToString();
                 scam.description = reader["description"].ToString();
                 scam.datePosted = DateTime.Parse(reader["datePosted"].ToString());
                 scam.firstReportedBy = int.Parse(Convert.ToString(reader["firstReportedBy"]));
+                scam.votes = int.Parse(Convert.ToString(reader["votes"]));
+                try
+                {
+                    scam.vote = Convert.ToInt16(reader["vote"]);
+                }
+                catch (Exception)
+                {
+
+                    scam.vote = 0;
+                }
                 scamList.Add(scam);
             }
+            
+            sqlConnection1.Close();
             return View(scamList.ToList());
         }
         public ActionResult IndexSearch(String search)
@@ -40,22 +61,38 @@ namespace ScamAlert.Controllers
             SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
             SqlCommand cmd = new SqlCommand("uspGetScamsSearch", sqlConnection1);
             cmd.CommandType = CommandType.StoredProcedure;
+            int userId = getUserId();
+            cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+            if(search == null)
+            {
+                search = "";
+            }
             cmd.Parameters.Add("@Search", SqlDbType.VarChar).Value = search;
             sqlConnection1.Open();
             // Use a reader to get a list
             SqlDataReader reader = cmd.ExecuteReader();
-            List<Scam> scamList = new List<Scam>();
+            List<ScamVote> scamList = new List<ScamVote>();
             // Create a list using the reader
             while (reader.Read())
             {
-                Scam scam = new Scam();
+                ScamVote scam = new ScamVote();
                 scam.scamId = int.Parse(Convert.ToString(reader["scamId"]));
                 scam.scamName = reader["scamName"].ToString();
                 scam.description = reader["description"].ToString();
                 scam.datePosted = DateTime.Parse(reader["datePosted"].ToString());
                 scam.firstReportedBy = int.Parse(Convert.ToString(reader["firstReportedBy"]));
+                scam.votes = int.Parse(Convert.ToString(reader["votes"]));
+                try
+                {
+                    scam.vote = int.Parse(Convert.ToString(reader["vote"]));
+                }
+                catch (Exception e)
+                {
+                    scam.vote = 0;
+                }
                 scamList.Add(scam);
             }
+            sqlConnection1.Close();
             return View(scamList.ToList());
         }
         // GET: IndexError
@@ -76,6 +113,29 @@ namespace ScamAlert.Controllers
                 };
                 List<ScamReports> modelList = new List<ScamReports>();
                 modelList.Add(model);
+                if (User.Identity.IsAuthenticated == false)
+                {
+                    ViewData["previous"] = false;
+                }
+                else
+                {
+                    SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
+                    SqlCommand cmd2 = new SqlCommand("uspCheckForPreviousScamReport", sqlConnection1);
+                    cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.Add("@userId", SqlDbType.VarChar).Value = getUserId();
+                    cmd2.Parameters.Add("@scamId", SqlDbType.VarChar).Value = scamId;
+                    sqlConnection1.Open();
+                    int count = 0;
+                    count = (Int32)cmd2.ExecuteScalar();
+                    if (count == 1)
+                    {
+                        ViewData["previous"] = true;
+                    }
+                    else
+                    {
+                        ViewData["previous"] = false;
+                    }
+                }
                 //Return the view
                 return View(modelList);
             }
@@ -84,7 +144,19 @@ namespace ScamAlert.Controllers
                 return RedirectToAction("IndexError", "Home");
             }
         }
-        
+        [Authorize]
+        public ActionResult Upvote(int scamId)
+        {
+            db.uspVote(getUserId(), scamId, true);
+            return RedirectToAction("IndexSearch", "Home", "");
+        }
+        [Authorize]
+        public ActionResult Downvote(int scamId)
+        {
+            db.uspVote(getUserId(), scamId, false);
+            return RedirectToAction("IndexSearch", "Home", "");
+        }
+
         private List<ScamReport> getScamReportss(int scamId)
         {
             Session["scamId"] = scamId;
@@ -110,6 +182,7 @@ namespace ScamAlert.Controllers
             sqlConnection1.Close();
             return scamrList;
         }
+        
         private int getUserId()
         {
             SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
@@ -118,7 +191,14 @@ namespace ScamAlert.Controllers
             cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = User.Identity.Name;
             sqlConnection1.Open();
             int count = 0;
-            count = (Int32)cmd.ExecuteScalar();
+            try
+            {
+                count = (Int32)cmd.ExecuteScalar();
+            }
+            catch (Exception)
+            {
+                count = 0;
+            }
             return count;
         }
     }

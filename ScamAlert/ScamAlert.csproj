@@ -165,7 +165,14 @@
     <Compile Include="Controllers\ScamsController.cs" />
     <Compile Include="Models\ChildNodes.cs" />
     <Compile Include="Models\ScamReports.cs" />
+    <Compile Include="Models\ScamVote.cs" />
     <Compile Include="Models\uspGetScamReports_Result.cs">
+      <DependentUpon>ScamAlert.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\uspGetScamsSearch_Result.cs">
+      <DependentUpon>ScamAlert.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\uspGetUser_Result.cs">
       <DependentUpon>ScamAlert.tt</DependentUpon>
     </Compile>
     <Compile Include="MyRoleProvider.cs" />
@@ -215,14 +222,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-themedef.css" />
+    <Content Include="Content\bootstrap-themedef.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\downempty.png" />
+    <Content Include="images\downfull.png" />
+    <Content Include="images\upempty.png" />
+    <Content Include="images\upfull.png" />
     <Content Include="Models\ScamAlert.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ScamAlert.edmx</DependentUpon>
@@ -242,10 +253,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrapdef.min.css.map" />
+    <Content Include="Content\bootstrapdef.css.map" />
+    <Content Include="Content\bootstrap-themedef.min.css.map" />
+    <Content Include="Content\bootstrap-themedef.css.map" />
     <EntityDeploy Include="Models\ScamAlert.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ScamAlert.Designer.cs</LastGenOutput>

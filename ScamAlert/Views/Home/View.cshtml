@@ -32,10 +32,13 @@
         }
     </table>
 </div>
-<p>@if (User.Identity.IsAuthenticated)
-{
-    @Html.ActionLink("Add your own report", "CreateScamReport", "ScamReport")
-}
+<p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        if((bool)ViewData["previous"] == false) {
+            @Html.ActionLink("Add your own report", "CreateScamReport", "ScamReport")
+        }
+    }
     <br />
     @Html.ActionLink("Back to Scam List", "Index", "Home")
 </p>

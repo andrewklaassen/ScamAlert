@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ScamAlert.Models.Scam>
+﻿@model IEnumerable<ScamAlert.Models.ScamVote>
 
 @{
     ViewBag.Title = "Home Page";
@@ -6,7 +6,7 @@
 @Html.Raw(ViewBag.Message)
 <div class="jumbotron">
     <h1>Scam Alert</h1>
-    <p class="lead">Scam artists and malicious people are all over the internet, but you can now you can learn how they are attempting to get your information.</p>
+    <p class="lead">Scam artists and malicious people are all over the internet, but you can now learn how they are attempting to get your information.</p>
 </div>
 @using (Html.BeginForm("IndexSearch", "Home", FormMethod.Post))
 {
@@ -15,6 +15,9 @@
 }
 <table class="table">
     <tr>
+        <th>
+            Vote
+        </th>
         <th>
             Scam Name
         </th>
@@ -26,20 +29,48 @@
     @foreach (var item in Model)
     {
         <tr>
+            <td width="1%">
+                @if (item.vote == 0)
+                {
+                    <a href='@Url.Action("Upvote", "Home", new { scamId = item.scamId })'>
+                        <img src="~/images/upempty.png" width="20" height="12" alt="up arrow" /><br />
+                    </a>
+                    <p> @item.votes</p>
+                    <a href='@Url.Action("Downvote", "Home", new { scamId = item.scamId })'>
+                        <img src="~/images/downempty.png" width="20" height="12" alt="down arrow" />
+                    </a>
+                }
+                else if (item.vote == 1)
+                {
+                    <a href='@Url.Action("Upvote", "Home", new { scamId = item.scamId })'>
+                        <img src="~/images/upempty.png" width="20" height="12" alt="up arrow" /><br />
+                    </a>
+                        <p> @item.votes</p>
+                        <img src="~/images/downfull.png" width="20" height="12" alt="down arrow" />
+                }
+                else if (item.vote == 2)
+                {
+                    <img src="~/images/upfull.png" width="20" height="12" alt="up arrow" /><br />
+                            <p> @item.votes</p>
+                            <a href='@Url.Action("Downvote", "Home", new { scamId = item.scamId })'>
+                                <img src="~/images/downempty.png" width="20" height="12" alt="down arrow" />
+                            </a>
+                }
+                else
+                {
+                    <p>Error, please contact moderator</p>
+                }
+            </td>
             <td width="20%">
                 @Html.DisplayFor(modelItem => item.scamName)
             </td>
             <td width="55%">
                 @Html.DisplayFor(modelItem => item.description)
             </td>
-            <td width="25%">
-                @Html.ActionLink("View Scam Reports", "View", new { scamId = item.scamId }, 0)
+            <td width="24%">
+                @Html.ActionLink("View Scam Reports", "View", new { scamId = item.scamId })
             </td>
         </tr>
     }
 </table>
-Can't find the Scam?
-@if (User.Identity.IsAuthenticated)
-{
-@Html.ActionLink("Create A New One", "Create", "Scams")
-}
+@Html.ActionLink("Can't find the Scam? create your own Scam","Create","Scams")

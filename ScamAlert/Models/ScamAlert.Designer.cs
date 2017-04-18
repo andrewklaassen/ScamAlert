@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\168359\Source\Repos\ScamAlert\ScamAlert\Models\ScamAlert.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\Andrew\documents\visual studio 2015\Projects\ScamAlert\ScamAlert\Models\ScamAlert.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

@@ -265,5 +265,49 @@ namespace ScamAlert.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspVote", userIdParameter, scamIdParameter, voteParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> uspCheckForPreviousScamReport(Nullable<int> userId, Nullable<int> scamId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            var scamIdParameter = scamId.HasValue ?
+                new ObjectParameter("scamId", scamId) :
+                new ObjectParameter("scamId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("uspCheckForPreviousScamReport", userIdParameter, scamIdParameter);
+        }
+    
+        public virtual ObjectResult<uspGetScamsSearch_Result> uspGetScamsSearch(string search, Nullable<int> userId)
+        {
+            var searchParameter = search != null ?
+                new ObjectParameter("Search", search) :
+                new ObjectParameter("Search", typeof(string));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetScamsSearch_Result>("uspGetScamsSearch", searchParameter, userIdParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> uspGetUserId(string userName)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("uspGetUserId", userNameParameter);
+        }
+    
+        public virtual ObjectResult<uspGetUser_Result> uspGetUser(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetUser_Result>("uspGetUser", userIdParameter);
+        }
     }
 }

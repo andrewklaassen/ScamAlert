@@ -165,10 +165,24 @@
           <Parameter Name="Username" Type="varchar" Mode="In" />
           <Parameter Name="isAdmin" Type="int" Mode="InOut" />
         </Function>
+        <Function Name="uspCheckForPreviousScamReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+          <Parameter Name="scamId" Type="int" Mode="In" />
+        </Function>
         <Function Name="uspGetScamReports" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="scamId" Type="int" Mode="In" />
         </Function>
         <Function Name="uspGetScams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="uspGetScamsSearch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+          <Parameter Name="UserId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspGetUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspGetUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="uspGetVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="int" Mode="In" />
           <Parameter Name="scamId" Type="int" Mode="In" />
@@ -295,7 +309,7 @@
             <Parameter Name="isAdmin" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="uspGetScamReports" ReturnType="Collection(aklaassenModel.uspGetScamReports_Result)">
-            <Parameter Name="scamId" Mode="In" Type="Int32" />
+          <Parameter Name="scamId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="uspGetVote" ReturnType="Collection(Boolean)">
             <Parameter Name="userId" Mode="In" Type="Int32" />
@@ -313,6 +327,20 @@
             <Parameter Name="userId" Mode="In" Type="Int32" />
             <Parameter Name="scamId" Mode="In" Type="Int32" />
             <Parameter Name="vote" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="uspCheckForPreviousScamReport" ReturnType="Collection(Int32)">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
+            <Parameter Name="scamId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetScamsSearch" ReturnType="Collection(aklaassenModel.uspGetScamsSearch_Result)">
+          <Parameter Name="Search" Mode="In" Type="String" />
+            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetUserId" ReturnType="Collection(Int32)">
+          <Parameter Name="UserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetUser" ReturnType="Collection(aklaassenModel.uspGetUser_Result)">
+            <Parameter Name="userId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -457,6 +485,18 @@
           <Property Type="DateTime" Name="timePosted" Nullable="false" Precision="23" />
           <Property Type="String" Name="userName" Nullable="true" MaxLength="20" />
         </ComplexType>
+        <ComplexType Name="uspGetScamsSearch_Result">
+          <Property Type="Int32" Name="scamId" Nullable="false" />
+          <Property Type="String" Name="scamName" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="description" Nullable="false" />
+          <Property Type="DateTime" Name="datePosted" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="firstReportedBy" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="uspGetUser_Result">
+          <Property Type="String" Name="userName" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="firstName" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="lastName" Nullable="true" MaxLength="15" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -569,6 +609,28 @@
           <FunctionImportMapping FunctionImportName="uspUserExists" FunctionName="aklaassenModel.Store.uspUserExists" />
           <FunctionImportMapping FunctionImportName="uspVerifyUser" FunctionName="aklaassenModel.Store.uspVerifyUser" />
           <FunctionImportMapping FunctionImportName="uspVote" FunctionName="aklaassenModel.Store.uspVote" />
+          <FunctionImportMapping FunctionImportName="uspCheckForPreviousScamReport" FunctionName="aklaassenModel.Store.uspCheckForPreviousScamReport" />
+          <FunctionImportMapping FunctionImportName="uspGetScamsSearch" FunctionName="aklaassenModel.Store.uspGetScamsSearch">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="aklaassenModel.uspGetScamsSearch_Result">
+                <ScalarProperty Name="scamId" ColumnName="scamId" />
+                <ScalarProperty Name="scamName" ColumnName="scamName" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="datePosted" ColumnName="datePosted" />
+                <ScalarProperty Name="firstReportedBy" ColumnName="firstReportedBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetUserId" FunctionName="aklaassenModel.Store.uspGetUserId" />
+          <FunctionImportMapping FunctionImportName="uspGetUser" FunctionName="aklaassenModel.Store.uspGetUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="aklaassenModel.uspGetUser_Result">
+                <ScalarProperty Name="userName" ColumnName="userName" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -21,7 +21,7 @@ namespace ScamAlert.Controllers
         public ActionResult Login(ScamAlert.Models.User c)
         {
             // Compute the hash
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(c.passwordHash + "123");
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(c.passwordHash + "abc123lkj");
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
             String hash = System.Text.Encoding.UTF8.GetString(data);
             // Open a Sql connection
@@ -64,7 +64,7 @@ namespace ScamAlert.Controllers
         public ActionResult Register(User u)
         {
             // Hash the password
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(u.passwordHash + "123");
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(u.passwordHash + "abc123lkj");
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
             String hash = System.Text.Encoding.UTF8.GetString(data);
             // Use Database context to do stored procedure

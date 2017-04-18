@@ -22,3 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.voteNumber {
+    margin-left: 2px;
+}
+
+.parrow {
+    width:20px;
+    text-align: center;
+    margin: 0px;
+}
