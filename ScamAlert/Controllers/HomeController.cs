@@ -173,6 +173,7 @@ namespace ScamAlert.Controllers
             while (reader.Read())
             {
                 ScamReport scamreport = new ScamReport();
+                scamreport.scamId = scamId;
                 scamreport.report = reader["report"].ToString();
                 scamreport.timePosted = DateTime.Parse(reader["timePosted"].ToString());
                 scamreport.User = new User();

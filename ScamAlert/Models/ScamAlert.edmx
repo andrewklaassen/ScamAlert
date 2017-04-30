@@ -33,6 +33,8 @@
           <Property Name="description" Type="varchar(max)" Nullable="false" />
           <Property Name="datePosted" Type="datetime" Nullable="false" />
           <Property Name="firstReportedBy" Type="int" Nullable="false" />
+          <Property Name="latitude" Type="decimal" Precision="6" Scale="3" />
+          <Property Name="longitude" Type="decimal" Precision="6" Scale="3" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -149,6 +151,8 @@
           <Parameter Name="scamName" Type="varchar" Mode="In" />
           <Parameter Name="description" Type="varchar(max)" Mode="In" />
           <Parameter Name="firstReportedBy" Type="int" Mode="In" />
+          <Parameter Name="latitude" Type="decimal" Mode="In" />
+          <Parameter Name="longitude" Type="decimal" Mode="In" />
         </Function>
         <Function Name="uspAddAScamReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="int" Mode="In" />
@@ -266,6 +270,8 @@
             <Parameter Name="scamName" Mode="In" Type="String" />
             <Parameter Name="description" Mode="In" Type="String" />
             <Parameter Name="firstReportedBy" Mode="In" Type="Int32" />
+            <Parameter Name="latitude" Mode="In" Type="Decimal" />
+            <Parameter Name="longitude" Mode="In" Type="Decimal" />
           </FunctionImport>
           <FunctionImport Name="uspAddUser">
             <Parameter Name="userName" Mode="In" Type="String" />
@@ -333,14 +339,14 @@
             <Parameter Name="scamId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="uspGetScamsSearch" ReturnType="Collection(aklaassenModel.uspGetScamsSearch_Result)">
-          <Parameter Name="Search" Mode="In" Type="String" />
+            <Parameter Name="Search" Mode="In" Type="String" />
             <Parameter Name="UserId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="uspGetUserId" ReturnType="Collection(Int32)">
           <Parameter Name="UserName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="uspGetUser" ReturnType="Collection(aklaassenModel.uspGetUser_Result)">
-            <Parameter Name="userId" Mode="In" Type="Int32" />
+          <Parameter Name="userId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
@@ -394,6 +400,8 @@
           <NavigationProperty Name="ScamReports" Relationship="aklaassenModel.FK_ScamReports_Scams" FromRole="Scam" ToRole="ScamReport" />
           <NavigationProperty Name="Votes" Relationship="aklaassenModel.FK_Votes_Scams" FromRole="Scam" ToRole="Vote" />
           <NavigationProperty Name="User" Relationship="aklaassenModel.ScamFirstReportedBy" FromRole="Scam" ToRole="User" />
+          <Property Name="latitude" Type="Decimal" Precision="6" Scale="3" />
+          <Property Name="longitude" Type="Decimal" Precision="6" Scale="3" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -564,6 +572,8 @@
           <EntitySetMapping Name="Scams">
             <EntityTypeMapping TypeName="aklaassenModel.Scam">
               <MappingFragment StoreEntitySet="Scams">
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
                 <ScalarProperty Name="firstReportedBy" ColumnName="firstReportedBy" />
                 <ScalarProperty Name="datePosted" ColumnName="datePosted" />
                 <ScalarProperty Name="description" ColumnName="description" />

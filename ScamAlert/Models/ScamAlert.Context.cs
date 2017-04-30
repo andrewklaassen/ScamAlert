@@ -136,7 +136,7 @@ namespace ScamAlert.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
     
-        public virtual int uspAddAScam(string scamName, string description, Nullable<int> firstReportedBy)
+        public virtual int uspAddAScam(string scamName, string description, Nullable<int> firstReportedBy, Nullable<decimal> latitude, Nullable<decimal> longitude)
         {
             var scamNameParameter = scamName != null ?
                 new ObjectParameter("scamName", scamName) :
@@ -150,7 +150,15 @@ namespace ScamAlert.Models
                 new ObjectParameter("firstReportedBy", firstReportedBy) :
                 new ObjectParameter("firstReportedBy", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspAddAScam", scamNameParameter, descriptionParameter, firstReportedByParameter);
+            var latitudeParameter = latitude.HasValue ?
+                new ObjectParameter("latitude", latitude) :
+                new ObjectParameter("latitude", typeof(decimal));
+    
+            var longitudeParameter = longitude.HasValue ?
+                new ObjectParameter("longitude", longitude) :
+                new ObjectParameter("longitude", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspAddAScam", scamNameParameter, descriptionParameter, firstReportedByParameter, latitudeParameter, longitudeParameter);
         }
     
         public virtual int uspAddUser(string userName, string firstName, string lastName, string passwordHash)

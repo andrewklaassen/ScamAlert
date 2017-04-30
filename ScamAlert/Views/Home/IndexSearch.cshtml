@@ -35,7 +35,7 @@
                     <a href='@Url.Action("Upvote", "Home", new { scamId = item.scamId })'>
                         <img src="~/images/upempty.png" width="20" height="12" alt="up arrow" /><br />
                     </a>
-                    <p> @item.votes</p>
+                    <p class="parrow"> @item.votes</p>
                     <a href='@Url.Action("Downvote", "Home", new { scamId = item.scamId })'>
                         <img src="~/images/downempty.png" width="20" height="12" alt="down arrow" />
                     </a>
@@ -45,13 +45,13 @@
                     <a href='@Url.Action("Upvote", "Home", new { scamId = item.scamId })'>
                         <img src="~/images/upempty.png" width="20" height="12" alt="up arrow" /><br />
                     </a>
-                        <p> @item.votes</p>
+                        <p class="parrow"> @item.votes</p>
                         <img src="~/images/downfull.png" width="20" height="12" alt="down arrow" />
                 }
                 else if (item.vote == 2)
                 {
                     <img src="~/images/upfull.png" width="20" height="12" alt="up arrow" /><br />
-                            <p> @item.votes</p>
+                            <p class="parrow"> @item.votes</p>
                             <a href='@Url.Action("Downvote", "Home", new { scamId = item.scamId })'>
                                 <img src="~/images/downempty.png" width="20" height="12" alt="down arrow" />
                             </a>
@@ -73,4 +73,5 @@
         </tr>
     }
 </table>
+
 @Html.ActionLink("Can't find the Scam? create your own Scam","Create","Scams")

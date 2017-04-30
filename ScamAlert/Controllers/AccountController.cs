@@ -37,6 +37,13 @@ namespace ScamAlert.Controllers
             if (count == 1)
             {
                 FormsAuthentication.SetAuthCookie(c.userName, false);
+                SqlCommand cm = new SqlCommand("uspGetPoints", sqlConnection1);
+                cm.CommandType = CommandType.StoredProcedure;
+                int userid = getUserId(c.userName);
+                cm.Parameters.Add("@userId", SqlDbType.VarChar).Value = userid;
+                int points = 0;
+                points = (Int32)cm.ExecuteScalar();
+                ViewData["points"] = points;
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -79,6 +86,24 @@ namespace ScamAlert.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
-
+        private int getUserId(string username)
+        {
+            SqlConnection sqlConnection = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
+            SqlCommand cmd = new SqlCommand("uspGetUserId", sqlConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@UserName", SqlDbType.VarChar).Value = username;
+            sqlConnection.Open();
+            int count = 0;
+            try
+            {
+                count = (Int32)cmd.ExecuteScalar();
+            }
+            catch (Exception)
+            {
+                count = 0;
+            }
+            return count;
+        }
     }
+
 }

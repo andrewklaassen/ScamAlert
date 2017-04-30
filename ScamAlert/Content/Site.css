@@ -32,3 +32,8 @@ textarea {
     text-align: center;
     margin: 0px;
 }
+
+#map {
+        height: 400px;
+        width: 800px;
+       }

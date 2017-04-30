@@ -30,7 +30,12 @@
                 @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div id="map"></div>
+        @Html.HiddenFor(model => model.longitude)
+        @Html.HiddenFor(model => model.latitude)
+        @*<input type="hidden" id="longitude" value="0">
+        <input type="hidden" id="latitude" value="0">*@
+        <br />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -42,3 +47,50 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+
+<script>
+    var map;
+    var markers = [];
+        function initMap() {
+            var cent = { lat: 37.397, lng: -90.644 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: cent,
+                zoom: 4
+            });
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(event.latLng);
+            });
+            }
+
+        function placeMarker(location) {
+            deleteMarkers();
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    animation: google.maps.Animation.DROP
+                });
+                map.setCenter(location);
+                markers.push(marker);
+                $("#latitude").val(marker.getPosition().lat());
+                $("#longitude").val(marker.getPosition().lng());
+                console.log($("#latitude").val());
+        }
+        function setMapOnAll(map) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+        }
+
+        // Removes the markers from the map, but keeps them in the array.
+        function clearMarkers() {
+            setMapOnAll(null);
+        }
+        function deleteMarkers() {
+            clearMarkers();
+            markers = [];
+        }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYaJw7g_rTxiEAwogUo87BQU7FPdRGA_4&callback=initMap"
+        async defer></script>

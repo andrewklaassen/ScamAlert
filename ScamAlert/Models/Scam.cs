@@ -26,6 +26,8 @@ namespace ScamAlert.Models
         public string description { get; set; }
         public System.DateTime datePosted { get; set; }
         public int firstReportedBy { get; set; }
+        public Nullable<decimal> latitude { get; set; }
+        public Nullable<decimal> longitude { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ScamReport> ScamReports { get; set; }

@@ -15,7 +15,7 @@ namespace ScamAlert.Controllers
     {
         private aklaassenEntities1 db = new aklaassenEntities1();
         
-        
+        [Authorize]
         // GET: Scams/Create
         public ActionResult Create()
         {
@@ -28,10 +28,10 @@ namespace ScamAlert.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "scamId,scamName,description,datePosted,firstReportedBy")] Scam scam)
+        public ActionResult Create([Bind(Include = "scamId,scamName,description,datePosted,firstReportedBy,latitude,longitude")] Scam scam)
         {
             int userId = getUserId();
-            db.uspAddAScam(scam.scamName,scam.description, getUserId());
+            db.uspAddAScam(scam.scamName,scam.description, getUserId(),scam.latitude, scam.longitude );
             return RedirectToAction("Index", "Home");
         }
 
@@ -108,7 +108,39 @@ namespace ScamAlert.Controllers
             sqlConnection1.Open();
             int count = 0;
             count = (Int32)cmd.ExecuteScalar();
+            sqlConnection1.Close();
             return count;
+        }
+        public ActionResult Map()
+        {
+            
+            return View();
+
+        }
+        public JsonResult getLocations() {
+            SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
+            SqlCommand cmd = new SqlCommand("uspGetLocations", sqlConnection1);
+            cmd.CommandType = CommandType.StoredProcedure;
+            sqlConnection1.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<Location> locList = new List<Location>();
+            // Create a list using the reader
+            while (reader.Read())
+            {
+                Location loc = new Location();
+                try
+                {
+                    loc.longitude = double.Parse(Convert.ToString(reader["longitude"]));
+                    loc.latitude = double.Parse(Convert.ToString(reader["latitude"]));
+                }
+                catch (Exception e)
+                {
+                    //Skip because null objects
+                }
+                locList.Add(loc);
+            }
+            sqlConnection1.Close();
+            return Json(locList, JsonRequestBehavior.AllowGet);
         }
     }
 }

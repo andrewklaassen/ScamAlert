@@ -20,7 +20,16 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Report a Scam", "Create", "Scams")</li>
+                    <li>@Html.ActionLink("Scams Reported Map", "Map", "Scams")</li>
                     <li>@Html.ActionLink("RSS Feed", "Index", "RSS")</li>
+                    @*@if (User.Identity.IsAuthenticated)
+                    {
+                        if ((int)ViewData["points"] > 249)
+                        {
+                        <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
+                        }
+                    }*@
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

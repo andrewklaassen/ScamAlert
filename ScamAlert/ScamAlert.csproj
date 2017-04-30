@@ -164,6 +164,7 @@
     <Compile Include="Controllers\ScamReportController.cs" />
     <Compile Include="Controllers\ScamsController.cs" />
     <Compile Include="Models\ChildNodes.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\ScamReports.cs" />
     <Compile Include="Models\ScamVote.cs" />
     <Compile Include="Models\uspGetScamReports_Result.cs">
@@ -311,6 +312,7 @@
     <Content Include="Views\Scams\Delete.cshtml" />
     <Content Include="Views\Scams\Edit.cshtml" />
     <Content Include="Views\RSS\Index.cshtml" />
+    <Content Include="Views\Scams\Map.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

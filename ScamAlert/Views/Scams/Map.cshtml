@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ScamAlert.Models.Location>
+@{
+    ViewBag.Title = "Scams Reported Map";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>Scams Reported Map</h3>
+<div class="col-lg-1 mapContainer">
+    <div id="map"></div>
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+
+    <script>
+        var map;
+        function initMap() {
+            var cent = { lat: 37.397, lng: -90.644 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: cent,
+                zoom: 4
+            });
+            
+
+            $.ajax({
+                type: 'GET',
+                url: '/scams/getLocations',
+                datatype : "json",
+                success: function (locations) {
+                    $.each(locations, function (i, location) {
+                        console.log(location);
+                        var mark = { lat: location.latitude, lng: location.longitude }
+                        console.log(mark);
+                        var marker = new google.maps.Marker({
+                            position: mark,
+                            map: map
+                        })
+                    });
+                }
+            });
+           
+            }
+      
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYaJw7g_rTxiEAwogUo87BQU7FPdRGA_4&callback=initMap"
+            async defer></script>
+    </div>
