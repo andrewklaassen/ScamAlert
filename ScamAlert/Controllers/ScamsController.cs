@@ -54,14 +54,15 @@ namespace ScamAlert.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "scamId,scamName,description,datePosted,firstReportedBy")] Scam scam)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(scam).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.firstReportedBy = new SelectList(db.Users, "userId", "userName", scam.firstReportedBy);
-            return View(scam);
+            SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
+            SqlCommand cmd = new SqlCommand("uspUpdateScamND", sqlConnection1);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@scamId", SqlDbType.VarChar).Value = scam.scamId;
+            cmd.Parameters.Add("@scamName", SqlDbType.VarChar).Value = scam.scamName;
+            cmd.Parameters.Add("@scamDescription", SqlDbType.VarChar).Value = scam.description;
+            sqlConnection1.Open();
+            cmd.ExecuteNonQuery();
+            return RedirectToAction("Index","Home");
         }
 
         // GET: Scams/Delete/5

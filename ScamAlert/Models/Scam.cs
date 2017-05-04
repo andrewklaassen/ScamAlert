@@ -11,7 +11,8 @@ namespace ScamAlert.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Scam
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,7 +23,9 @@ namespace ScamAlert.Models
         }
     
         public int scamId { get; set; }
+        [Required(ErrorMessage = "Please enter a name")]
         public string scamName { get; set; }
+        [Required(ErrorMessage = "Please enter a description")]
         public string description { get; set; }
         public System.DateTime datePosted { get; set; }
         public int firstReportedBy { get; set; }

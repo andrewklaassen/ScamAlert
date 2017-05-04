@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ScamAlert.Models.ScamUnapproved>
+
+@{
+    ViewBag.Title = "Approve";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Approve</h2>
+@if (Model.Count() == 0)
+{
+    <h3>There are no scams to approve</h3>
+} else {
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Date Posted
+        </th>
+        <th>
+            Reported By
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td width="15%">
+            @Html.DisplayFor(modelItem => item.scamName)
+        </td>
+        <td width="55%">
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td width="10%">
+            @Html.DisplayFor(modelItem => item.datePosted)
+        </td>
+        <td width="15%">
+            @Html.DisplayFor(modelItem => item.userName)
+        </td>
+        <td width="5%">
+            @Html.ActionLink("Approve", "ApproveScam", new { scamId=item.scamId }) 
+        </td>
+    </tr>
+}
+
+</table>
+}

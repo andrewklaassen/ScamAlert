@@ -69,6 +69,10 @@
             </td>
             <td width="24%">
                 @Html.ActionLink("View Scam Reports", "View", new { scamId = item.scamId })
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <p class="adminLink" style="display:none;">@Html.ActionLink("Edit", "Edit", "Scams", new { id = item.scamId }, null)</p>
+                }
             </td>
         </tr>
     }

@@ -50,20 +50,15 @@ namespace ScamAlert
             string[] role = new string[1];
             aklaassenEntities1 sse = new aklaassenEntities1();
             int isAdmin = 0;
-            int isUser = 0;
             SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
             SqlCommand cmd = new SqlCommand("uspAdminExists", sqlConnection1);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@Username", SqlDbType.VarChar).Value = userName;
-            SqlCommand cmd2 = new SqlCommand("uspUserExists", sqlConnection1);
-            cmd2.CommandType = CommandType.StoredProcedure;
-            cmd2.Parameters.Add("@Username", SqlDbType.VarChar).Value = userName;
 
             try
             {
                 sqlConnection1.Open();
                 isAdmin = (int)cmd.ExecuteScalar();
-                isUser = (int)cmd2.ExecuteScalar();
             }
             catch (Exception e)
             {
@@ -74,12 +69,6 @@ namespace ScamAlert
             {
                 string rolea = "A";
                 role[0] = rolea;
-                return role;
-            }
-            if (isUser == 1)
-            {
-                string rolec = "U";
-                role[0] = rolec;
                 return role;
             }
             return role;

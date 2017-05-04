@@ -23,13 +23,11 @@
                     <li>@Html.ActionLink("Report a Scam", "Create", "Scams")</li>
                     <li>@Html.ActionLink("Scams Reported Map", "Map", "Scams")</li>
                     <li>@Html.ActionLink("RSS Feed", "Index", "RSS")</li>
-                    @*@if (User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        if ((int)ViewData["points"] > 249)
-                        {
-                        <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
-                        }
-                    }*@
+                        
+                        <li class="adminLink" style="display:none;">@Html.ActionLink("Admin", "Index", "Admin")</li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -42,7 +40,28 @@
             <p>&copy; Scam Alert</p>
         </footer>
     </div>
-
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script>
+        function getPoints() {
+            $.ajax({
+                async: true,
+                type: 'GET',
+                url: '/Home/getPoints',
+                datatype: "json",
+                success: function (points) {
+                    if (points > 249) {
+                        $(".adminLink").show();
+                    }
+                }
+            }); 
+        }
+        @{ Boolean isAuthC = User.Identity.IsAuthenticated;}
+        var isAuth = "<%=isAuthC%>"
+        if (isAuth)
+        {
+            getPoints();
+        }
+    </script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

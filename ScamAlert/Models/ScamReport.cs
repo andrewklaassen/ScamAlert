@@ -11,12 +11,14 @@ namespace ScamAlert.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class ScamReport
     {
         public int scamReportId { get; set; }
         public int scamId { get; set; }
         public int byUserId { get; set; }
+        [Required(ErrorMessage = "Please enter in a report")]
         public string report { get; set; }
         public System.DateTime timePosted { get; set; }
     

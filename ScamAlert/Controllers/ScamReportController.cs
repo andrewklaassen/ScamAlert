@@ -16,18 +16,20 @@ namespace ScamAlert.Controllers
         private aklaassenEntities1 db = new aklaassenEntities1();
 
         // GET: ScamReport/Create
+        [Authorize]
         public ActionResult CreateScamReport()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult CreateScamReport(ScamReport scamReport)
         {
             int userId = getUserId();
             int scamId = Convert.ToInt32(Session["scamId"]);
             db.uspAddAScamReport(userId, scamId, scamReport.report);
-            return RedirectToAction("View", "Home", scamId);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: ScamReport/Edit/5

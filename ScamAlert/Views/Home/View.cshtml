@@ -6,9 +6,15 @@
 }
 
 <h2>View</h2>
-
+<h4>Scam Reports</h4>
+@if (Model.First().ScamReportss.Count == 0)
+{
+    <h3>There are no Scam Reports</h3>
+}
+else
+{
 <div>
-    <h4>Scam Reports</h4>
+    
     <hr />
     <table class="table">
         <tr>
@@ -31,7 +37,8 @@
             </tr>
         }
     </table>
-</div>
+    </div>
+    }
 <p>
     @if (User.Identity.IsAuthenticated)
     {

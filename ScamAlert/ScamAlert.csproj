@@ -159,6 +159,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RSSController.cs" />
     <Compile Include="Controllers\ScamReportController.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Models\ChildNodes.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\ScamReports.cs" />
+    <Compile Include="Models\ScamUnapproved.cs" />
     <Compile Include="Models\ScamVote.cs" />
     <Compile Include="Models\uspGetScamReports_Result.cs">
       <DependentUpon>ScamAlert.tt</DependentUpon>
@@ -309,10 +311,12 @@
     <Content Include="Views\ScamReport\Edit.cshtml" />
     <Content Include="Views\Home\IndexSearch.cshtml" />
     <Content Include="Views\Scams\Create.cshtml" />
-    <Content Include="Views\Scams\Delete.cshtml" />
     <Content Include="Views\Scams\Edit.cshtml" />
     <Content Include="Views\RSS\Index.cshtml" />
     <Content Include="Views\Scams\Map.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Approve.cshtml" />
+    <Content Include="Views\Home\IndexError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

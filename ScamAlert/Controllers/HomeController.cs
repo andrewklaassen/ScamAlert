@@ -100,7 +100,7 @@ namespace ScamAlert.Controllers
         public ActionResult IndexError()
         {
             ViewBag.Message = "<div class=\"alert alert-info alert-dismissible\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>" + "No Shopping Cart Items added" + " </div>";
-            return View("Index");
+            return View("IndexError");
         }
         public ActionResult View(int scamId)
         {
@@ -135,7 +135,9 @@ namespace ScamAlert.Controllers
                     {
                         ViewData["previous"] = false;
                     }
+                    sqlConnection1.Close();
                 }
+
                 //Return the view
                 return View(modelList);
             }
@@ -184,6 +186,26 @@ namespace ScamAlert.Controllers
             return scamrList;
         }
         
+        public JsonResult getPoints()
+        {
+            SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
+            SqlCommand cm = new SqlCommand("uspGetPoints", sqlConnection1);
+            cm.CommandType = CommandType.StoredProcedure;
+            int userid = getUserId();
+            cm.Parameters.Add("@userId", SqlDbType.VarChar).Value = userid;
+            sqlConnection1.Open();
+            int points = 0;
+            try
+            {
+                points = (Int32)cm.ExecuteScalar();
+            }
+            catch (Exception e)
+            {
+            }
+            sqlConnection1.Close();
+            return Json(points, JsonRequestBehavior.AllowGet);
+        }
+        
         private int getUserId()
         {
             SqlConnection sqlConnection1 = new SqlConnection("data source=cs.cofo.edu;initial catalog=aklaassen;persist security info=True;user id=aklaas01;password=paint123;");
@@ -200,6 +222,7 @@ namespace ScamAlert.Controllers
             {
                 count = 0;
             }
+            sqlConnection1.Close();
             return count;
         }
     }
